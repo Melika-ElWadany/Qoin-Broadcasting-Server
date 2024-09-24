@@ -1,0 +1,10 @@
+    # print("transactions data")
+    # print(data_as_dict["transactions"])
+    # print("-----------")
+    # print(json.loads(data_as_dict["transactions"]))
+    # print("-----------")
+    # print(type(data_as_dict["transactions"]))
+
+    # print((data_as_dict.decode("utf-8")))
+    # for tr in json.loads(data_as_dict.get("transactions")[0]):
+    #     print(tr)
