@@ -6,6 +6,7 @@ from . import serializers
 from rest_framework import status
 from .helperStructs import TransactionStruct
 import hashlib
+from .serializers import TransactionSerializer
 
 
 @api_view(["GET"])
@@ -20,6 +21,20 @@ def get_block_transaction(request, block_id):
     transactions = Transaction.objects.filter(parent_block=block_id)
     serialized_transactions = serializers.TransactionSerializer(transactions, many=True)
     return Response(serialized_transactions.data, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+def new_transaction(request):
+    # ntd = New Transaction Data
+    ntd = request.data
+    # print(ntd)
+    new_transaction_obj = Transaction(sender_id=ntd.get("sender_id"), trxn_uuid=ntd.get("trxn_uuid"),
+                                      sender_pub_key=ntd.get("sender_pub_key"), amount=ntd.get("amount"),
+                                      receiver_pub_key=ntd.get("receiver_pub_key"), trxn_hash=ntd.get("trxn_hash"),
+                                      trxn_signature=ntd.get("trxn_signature"))
+    new_transaction_obj.save()
+    print("lala")
+    return Response({"test-new_transaction-route": "test-new_transaction-route"}, status=status.HTTP_200_OK)
 
 
 @api_view(["POST", "GET"])
@@ -49,5 +64,12 @@ def new_block(request):
         new_block_hash = hashlib.sha256((bytes(new_block_hash_ingest, 'utf-8'))).hexdigest()
         print(new_block_hash)
 
-
     return Response({"test": "test"}, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def get_pending_transactions(request):
+    pending_transactions = Transaction.objects.filter(status="pending")[:10]
+    serialized_pending_transactions = TransactionSerializer(pending_transactions, many=True)
+    return Response(serialized_pending_transactions.data, status=status.HTTP_200_OK)
+
