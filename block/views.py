@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Block, Transaction
+from .models import Block, Transaction, Wallet
 from . import serializers
 from rest_framework import status
 from .helperStructs import TransactionStruct
@@ -35,6 +35,13 @@ def new_transaction(request):
     new_transaction_obj.save()
     print("lala")
     return Response({"test-new_transaction-route": "test-new_transaction-route"}, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def get_wallet_balance(request, sender_id):
+    wallet = Wallet.objects.get(pk=sender_id)
+    resp = {"wallet_balance": wallet.balance}
+    return Response(resp, status=status.HTTP_200_OK)
 
 
 @api_view(["POST", "GET"])
