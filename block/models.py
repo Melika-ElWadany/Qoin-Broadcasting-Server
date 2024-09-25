@@ -1,7 +1,6 @@
 from django.db import models
-
-
 choices = [("pending", "pending"), ("verified", "verified")]
+
 
 class Block(models.Model):
     hash = models.CharField(max_length=200)
